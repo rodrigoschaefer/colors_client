@@ -1,17 +1,17 @@
 import 'package:web3dart/credentials.dart';
 
-class Color {
-  int? id;
+class ColorModel {
+  BigInt? id;
   String ownerAddress;
   String rgb;
-  Color(
+  ColorModel(
       {this.id,
       required this.ownerAddress,
       required this.rgb});
 
-  factory Color.fromBlockchain(List<dynamic> fields) {
-    return Color(
-        id: (fields[0] as BigInt).toInt(),
+  factory ColorModel.fromBlockchain(List<dynamic> fields) {
+    return ColorModel(
+        id: fields[0] as BigInt,
         ownerAddress: (fields[1] as EthereumAddress).hexEip55,
         rgb: fields[2]
         );

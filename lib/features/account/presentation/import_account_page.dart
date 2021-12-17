@@ -19,14 +19,14 @@ class ImportAccountPage extends StatelessWidget {
             children: <Widget>[
               const Text(
                 'Enter the private key',
-                style: TextStyle(color: Colors.blue, fontSize: 18),
+                style: TextStyle(color: Colors.green, fontSize: 18),
               ),
               const SizedBox(
                 height: 10,
               ),
               TextField(
                 controller: _pKeyController,
-                style: const TextStyle(color: Colors.blue, fontSize: 16),
+                style: const TextStyle(color: Colors.green, fontSize: 16),
               ),
               const SizedBox(
                 height: 30,

@@ -1,5 +1,6 @@
-import 'package:colors_client/features/color/data/models/color.dart';
+import 'package:colors_client/features/color/data/models/color_model.dart';
 
 abstract class ColorRepository {
-  Future<List<Color>> getColorsByOwner(ownerAddress);
+  Future<List<ColorModel>> getColorsByOwner(ownerAddress);
+  Future<String?> mint(ownerAddress, int red, int green, int blue);
 }

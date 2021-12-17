@@ -1,19 +1,31 @@
+import 'package:colors_client/features/color/data/models/color_model.dart';
+import 'package:colors_client/features/color/presentation/create_color_page.dart';
+import 'package:colors_client/features/color/presentation/widgets/color_item.dart';
 import 'package:flutter/material.dart';
-import 'package:colors_client/core/presentation/widgets/rounded_button.dart';
 import 'package:colors_client/core/util/size_utils.dart';
 import 'package:colors_client/core/util/utils.dart';
-
 import 'package:colors_client/features/color/domain/repositories/color_repository.dart';
 
-import 'account_owned_colors_page.dart';
-
-
-class AccountHomePage extends StatelessWidget {
+class AccountHomePage extends StatefulWidget {
   const AccountHomePage(
       {Key? key, required this.accountAddress, required this.colorRepository})
       : super(key: key);
   final ColorRepository colorRepository;
   final String accountAddress;
+
+  @override
+  State<AccountHomePage> createState() => _AccountHomePageState();
+}
+
+class _AccountHomePageState extends State<AccountHomePage> {
+  late List<ColorModel> colors;
+  bool isCreatingColor = false;
+
+  @override
+  void initState() {
+    super.initState();
+    colors = [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +44,14 @@ class AccountHomePage extends StatelessWidget {
             children: [
               const Icon(
                 Icons.folder_open,
-                color: Colors.blue,
+                color: Colors.green,
               ),
               const SizedBox(
                 width: 10,
               ),
               Text(
-                accountAddress,
-                style: const TextStyle(color: Colors.blue),
+                widget.accountAddress,
+                style: const TextStyle(color: Colors.green),
               )
             ],
           ),
@@ -49,24 +61,33 @@ class AccountHomePage extends StatelessWidget {
         Expanded(
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RoundedButton(
-                    text: 'Owned Color Tokens',
-                    onTap: () => Utils.navigateToPage(
-                        context,
-                        AccountOwnedColorsPage(
-                            address: accountAddress,
-                            colorRepository: colorRepository)),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeUtils.verticalBlockSize * 1),
+                itemCount: colors.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ColorItem(
+                    id: colors[index].id!,
+                    ownerAddress: widget.accountAddress,
+                    rgb: 'FFFFFF',
+                  );
+                },
               )),
         ),
       ]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await Utils.navigateToPage(context,
+              CreateColorPage(widget.accountAddress, widget.colorRepository));
+        },
+        child: !isCreatingColor
+            ? const Icon(Icons.check)
+            : const CircularProgressIndicator(
+                color: Colors.white,
+              ),
+      ),
     );
   }
 }

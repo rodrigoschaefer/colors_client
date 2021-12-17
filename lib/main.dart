@@ -37,7 +37,7 @@ class CApp extends StatelessWidget {
       theme: theme.copyWith(
         colorScheme: theme.colorScheme.copyWith(
             secondary: Colors.white,
-            primary: Colors.blue,
+            primary: Colors.green,
             background: Colors.green),
         cardTheme: const CardTheme(color: Colors.lightGreen, elevation: 5),
         floatingActionButtonTheme:

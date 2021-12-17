@@ -12,7 +12,7 @@ class RoundedButton extends StatelessWidget {
   // ignore: use_key_in_widget_constructors
   const RoundedButton(
       {required this.text,
-      this.backgroundColor = Colors.blue,
+      this.backgroundColor = Colors.green,
       this.textColor = Colors.white,
       this.borderRadius = 40,
       required this.onTap,
