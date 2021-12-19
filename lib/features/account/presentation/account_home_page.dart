@@ -18,13 +18,29 @@ class AccountHomePage extends StatefulWidget {
 }
 
 class _AccountHomePageState extends State<AccountHomePage> {
-  late List<ColorModel> colors;
+  late List<ColorModel>? colors;
   bool isCreatingColor = false;
+  bool isFetchingColors = false;
 
   @override
   void initState() {
     super.initState();
     colors = [];
+    _fetchColors();
+  }
+
+  _fetchColors() async {
+    setState(() {
+      isFetchingColors = true;
+    });
+    try {
+      colors = await widget.colorRepository.getColors(widget.accountAddress);
+    } catch (e) {
+      colors = null;
+    }
+    setState(() {
+      isFetchingColors = false;
+    });
   }
 
   @override
@@ -59,28 +75,38 @@ class _AccountHomePageState extends State<AccountHomePage> {
           height: SizeUtils.verticalBlockSize * 6,
         ),
         Expanded(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.symmetric(
-                    vertical: SizeUtils.verticalBlockSize * 1),
-                itemCount: colors.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ColorItem(
-                    id: colors[index].id!,
-                    ownerAddress: widget.accountAddress,
-                    rgb: 'FFFFFF',
-                  );
-                },
-              )),
-        ),
+            child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Center(
+                    child: isFetchingColors
+                        ? const CircularProgressIndicator(
+                            color: Colors.green,
+                          )
+                        : colors != null
+                            ? ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeUtils.verticalBlockSize * 1),
+                                itemCount: colors!.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ColorItem(
+                                    id: colors![index].id!,
+                                    ownerAddress: widget.accountAddress,
+                                    rgb: colors![index].rgb,
+                                  );
+                                },
+                              )
+                            : Text('Error loading tokens')))),
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Utils.navigateToPage(context,
+          var result = await Utils.navigateToPage(context,
               CreateColorPage(widget.accountAddress, widget.colorRepository));
+          if (result != null && result) {
+            _fetchColors();
+          }
         },
         child: !isCreatingColor
             ? const Icon(Icons.check)

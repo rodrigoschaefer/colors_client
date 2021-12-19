@@ -60,17 +60,17 @@ class _CreateColorPageState extends State<CreateColorPage> {
                     _picker(
                         SizeUtils.verticalBlockSize * 20,
                         MediaQuery.of(context).size.width / 3.5,
-                        red,
+                        (index) => red = index,
                         Colors.red),
                     _picker(
                         SizeUtils.verticalBlockSize * 20,
                         MediaQuery.of(context).size.width / 3.5,
-                        green,
+                        (index) => green = index,
                         Colors.green),
                     _picker(
                         SizeUtils.verticalBlockSize * 20,
                         MediaQuery.of(context).size.width / 3.5,
-                        blue,
+                        (index) => blue = index,
                         Colors.blue),
                   ],
                 ))
@@ -87,7 +87,7 @@ class _CreateColorPageState extends State<CreateColorPage> {
                     .mint(widget.ownerAddress, red, green, blue);
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(result ?? 'Color created!')));
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
               }
             : null,
         child: !isCreatingColor
@@ -99,18 +99,15 @@ class _CreateColorPageState extends State<CreateColorPage> {
     );
   }
 
-  Widget _picker(height, width, target, labelColor) {
+  Widget _picker(height, width, onSelectedItemChanged, labelColor) {
     return SizedBox(
         height: height,
         width: width,
         child: CupertinoPicker(
-          itemExtent:
-              SizeUtils.verticalBlockSize * (SizeUtils.isTablet() ? 5 : 4),
-          useMagnifier: true,
-          children: _colorValues(labelColor),
-          onSelectedItemChanged: (selectedIndex) {
-            target = selectedIndex;
-          },
-        ));
+            itemExtent:
+                SizeUtils.verticalBlockSize * (SizeUtils.isTablet() ? 5 : 4),
+            useMagnifier: true,
+            children: _colorValues(labelColor),
+            onSelectedItemChanged: onSelectedItemChanged));
   }
 }

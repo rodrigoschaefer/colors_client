@@ -6,8 +6,9 @@ import 'package:colors_client/features/color/data/models/color_model.dart';
 import 'package:web3dart/web3dart.dart';
 
 abstract class ColorDatasource {
-  Future<List<ColorModel>> getColorsByOwner(ownerAddress);
+  Future<ColorModel> getColor(ownerAddress, id);
   Future<void> mintColor(ownerAddress, int red, int green, int blue);
+  Future<BigInt> totalSupply(ownerAddress);
 }
 
 class ColorLocalRpcDatasource implements ColorDatasource {
@@ -15,7 +16,7 @@ class ColorLocalRpcDatasource implements ColorDatasource {
   late Web3Client ethClient;
   late EthereumAddress contractAddress;
   late DeployedContract contract;
-  late ContractFunction getColorsByOwnerFunction, mintFunction;
+  late ContractFunction getColorsFunction, mintFunction, getTotalSupplyFunction;
   String rpcUrl = Constants.rpcUrl;
 
   ColorLocalRpcDatasource() {
@@ -29,24 +30,27 @@ class ColorLocalRpcDatasource implements ColorDatasource {
     String abi = await rootBundle.loadString('lib/abis/Colors.abi.json');
     contract =
         DeployedContract(ContractAbi.fromJson(abi, "Colors"), contractAddress);
-    getColorsByOwnerFunction = contract.function('colors');
+    getColorsFunction = contract.function('mintedColors');
+    getTotalSupplyFunction = contract.function('totalSupply');
     mintFunction = contract.function('mint');
   }
 
   @override
-  Future<List<ColorModel>> getColorsByOwner(ownerAddress) async {
-    /*
+  Future<ColorModel> getColor(ownerAddress, id) async {
     var data = await ethClient.call(
-        contract: contract,
-        function: getColorsByOwnerFunction,
-        params: [EthereumAddress.fromHex(ownerAddress)]);
-        
-    List<Color> colors = [];
-    for (List<dynamic> fields in data[0]) {
-      colors.add(Color.fromBlockchain(fields));
-    }
-    return colors;*/
-    return [];
+      contract: contract,
+      function: getColorsFunction,
+      params: [BigInt.from(id)],
+    );
+    return ColorModel(
+        id: BigInt.from(id), rgb: data[0], ownerAddress: ownerAddress);
+  }
+
+  @override
+  Future<BigInt> totalSupply(ownerAddress) async {
+    var data = await ethClient
+        .call(contract: contract, function: getTotalSupplyFunction, params: []);
+    return (data[0] as BigInt);
   }
 
   @override
@@ -60,9 +64,12 @@ class ColorLocalRpcDatasource implements ColorDatasource {
         from: EthereumAddress.fromHex(ownerAddress),
         contract: contract,
         function: mintFunction,
-        parameters: ['${red.toRadixString(16)}${green.toRadixString(16)}${blue.toRadixString(16)}'],
-        //value: EtherAmount.fromUnitAndValue(EtherUnit.wei, weiAmmount)
+        parameters: [_rgbDecToHexString(red, green, blue)],
       ),
     );
+  }
+
+  String _rgbDecToHexString(int red, int green, int blue) {
+    return '${red.toRadixString(16).padLeft(2, '0')}${green.toRadixString(16).padLeft(2, '0')}${blue.toRadixString(16).padLeft(2, '0')}';
   }
 }
