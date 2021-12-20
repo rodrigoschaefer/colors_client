@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:colors_client/core/presentation/widgets/rounded_button.dart';
 import 'package:colors_client/core/util/size_utils.dart';
-import 'package:colors_client/core/util/utils.dart';
+
 
 class ColorItem extends StatelessWidget {
   final BigInt id;
@@ -16,72 +16,74 @@ class ColorItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Color.fromARGB(
-          255,
-          int.parse(rgb.substring(0, 2), radix: 16),
-          int.parse(rgb.substring(2, 4), radix: 16),
-          int.parse(rgb.substring(4, 6), radix: 16)),
-      child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: Text(
-                            'Id:',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: Text(
-                            'rgb:',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            id.toString(),
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: SizeUtils.horizontalBlockSize * 3),
-                          ),
-                          Text(
-                            rgb,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: SizeUtils.horizontalBlockSize * 3),
-                          ),
-                        ],
-                      ),
-                    )
-                  ]),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [],
-              )
-            ],
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: SizeUtils.verticalBlockSize),
+      child: Column(
+        children: [
+          ClipOval(
+              child: Container(
+            height: SizeUtils.horizontalBlockSize * 30,
+            width: SizeUtils.horizontalBlockSize * 30,
+            color: Color.fromARGB(
+                255,
+                int.parse(rgb.substring(0, 2), radix: 16),
+                int.parse(rgb.substring(2, 4), radix: 16),
+                int.parse(rgb.substring(4, 6), radix: 16)),
           )),
+          Card(
+              child: Padding(
+                  padding: EdgeInsets.all(SizeUtils.horizontalBlockSize),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Text(
+                                'Id:',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 5),
+                              child: Text(
+                                'rgb:',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              id.toString(),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: SizeUtils.horizontalBlockSize * 3),
+                            ),
+                            Text(
+                              rgb,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: SizeUtils.horizontalBlockSize * 3),
+                            ),
+                          ],
+                        ),
+                      ]))),
+        ],
+      ),
     );
   }
 

@@ -49,13 +49,13 @@ class AccountItem extends StatelessWidget {
                           ),
                           title: const Text(
                             'Are you sure you want to delete this wallet? This cannot be reversed!',
-                            style: TextStyle(color: Colors.blue),
+                            style: TextStyle(color: Colors.green),
                           ),
                           // ignore: prefer_const_literals_to_create_immutables
                           actions: [
                             RoundedButton(
                               text: 'Yes',
-                              backgroundColor: Colors.lightBlue,
+                              backgroundColor: Colors.lightGreen,
                               onTap: onTapDelete,
                             ),
                             const SizedBox(
@@ -63,7 +63,7 @@ class AccountItem extends StatelessWidget {
                             ),
                             RoundedButton(
                                 text: 'Cancel',
-                                backgroundColor: Colors.lightBlue,
+                                backgroundColor: Colors.lightGreen,
                                 onTap: () {
                                   Navigator.pop(context);
                                 })

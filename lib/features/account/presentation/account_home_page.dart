@@ -85,7 +85,6 @@ class _AccountHomePageState extends State<AccountHomePage> {
                           )
                         : colors != null
                             ? ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 padding: EdgeInsets.symmetric(
                                     vertical: SizeUtils.verticalBlockSize * 1),

@@ -12,6 +12,11 @@ class ImportAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Import account',
+        ),
+      ),
       body: Container(
         padding: const EdgeInsets.all(10),
         child: Column(
